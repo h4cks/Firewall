@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<map proto="1.3.3">
+	<name>Firewall</name>
+	<version>0.1.0</version>
+	<objective>敵拠点のコアから溶岩を流出 / Leak lava from the enemy's obsidian core.</objective>
+
+	<authors>
+		<author>EEE</author>
+	</authors>
+
+	<contributors>
+		<contributor>0yuki</contributor>
+		<contributor>BubiHartman</contributor>
+		<contributor>coffee1375</contributor>
+		<contributor>MATSUKO89</contributor>
+		<contributor>nezumi_</contributor>
+	</contributors>
+
+	<teams>
+		<team max="16" color="green">Hacker Team</team>
+		<team max="16" color="red">Cracker Team</team>
+	</teams>
+
+	<!-- チームごとの初期装備 -->
+	<kits>
+		<!--  共通装備  -->
+		<kit name="default">
+			<!-- 装備 -->
+			<leggings bind="true">Chainmail Leggings</leggings>
+			<!-- ホットバー -->
+			<item slot="0" damage="-3000" enchantment="DAMAGE_ALL:1">Diamond Pickaxe</item>
+			<item slot="1">Bow</item>
+			<item slot="2" amount="32">Golden Carrot</item>
+			<item slot="3" amount="64">Nether Fence</item>
+			<item slot="4" amount="64">Stone Button</item>
+			<item slot="5" amount="64">TNT</item>
+			<item slot="6">Water Bucket</item>
+			<item slot="7" amount="64">Redstone</item>
+			<!-- インベントリ -->
+			<item slot="9" amount="48" bind="true">Arrow</item>
+			<item slot="13" amount="16">Stone Plate</item>
+			<item slot="14" amount="64">Redstone Torch On</item>
+			<item slot="15" amount="64" damage="7">Step</item>
+			<item slot="18" amount="64">TNT</item>
+			<item slot="19" amount="64">TNT</item>
+			<item slot="20" amount="16">Diode</item>
+			<item slot="21" amount="64">Snow Ball</item>
+			<item slot="22" amount="16">Lever</item>
+			<item slot="23" amount="64">Redstone</item>
+			<item slot="25">Water Bucket</item>
+			<item slot="27">Shears</item>
+			<item slot="28" amount="32">Vine</item>
+			<item slot="29" amount="8">Redstone Comparator</item>
+			<item slot="30" amount="16">Ladder</item>
+			<item slot="31" amount="64">Trap Door</item>
+			<item slot="32" amount="64">Redstone Block</item>
+			<item slot="34">Water Bucket</item>
+			<!-- ポーション効果 -->
+			<potion duration="5" amplifier="3">Damage Resistance</potion>
+		</kit>
+		<!-- ハッカーkit -->
+		<kit name="Hacker" parents="default">
+			<!-- 装備 -->
+			<chestplate color="55ff55" damage="-3000" bind="true">Leather Chestplate</chestplate>
+			<boots color="55ff55" damage="-3000" bind="true">Leather Boots</boots>
+			<!-- ホットバー -->
+			<item slot="8" amount="64" damage="5">Stained Clay</item>
+			<!-- インベントリ -->
+			<item slot="16" amount="64" damage="5">Stained Glass</item>
+			<item slot="17" amount="64" damage="5">Stained Clay</item>
+			<item slot="26" amount="64" damage="5">Stained Clay</item>
+			<item slot="35" amount="64" damage="5">Stained Clay</item>
+		</kit>
+		<!-- クラッカーkit -->
+		<kit name="Cracker" parents="default">
+			<!-- 装備 -->
+			<chestplate color="ff8855" damage="-3000" bind="true">Leather Chestplate</chestplate>
+			<boots color="ff8855" damage="-3000" bind="true">Leather Boots</boots>
+			<!-- ホットバー -->
+			<item slot="8" amount="64" damage="1">Stained Clay</item>
+			<!-- インベントリ -->
+			<item slot="16" amount="64" damage="1">Stained Glass</item>
+			<item slot="17" amount="64" damage="1">Stained Clay</item>
+			<item slot="26" amount="64" damage="1">Stained Clay</item>
+			<item slot="35" amount="64" damage="1">Stained Clay</item>
+		</kit>
+	</kits>
+
+	<!-- スポーン位置 -->
+	<spawns>
+		<spawn team="green" yaw="180" kit="Hacker">
+			<cuboid min="-1,7,51" max="2,7,54" />
+		</spawn>
+		<spawn team="red" yaw="0" kit="Cracker">
+			<cuboid min="-1,7,-53" max="2,7,-50" />
+		</spawn>
+		<default yaw="-90">
+			<cuboid min="-54,45,-1" max="-52,45,2" />
+		</default>
+	</spawns>
+
+	<!-- フィルター定義 -->
+	<filters>
+		<filter name="only-Hacker" parents="deny-players">
+			<allow>
+				<team>green</team>
+			</allow>
+		</filter>
+		<filter name="only-Cracker" parents="deny-players">
+			<allow>
+				<team>red</team>
+			</allow>
+		</filter>
+		<filter name="outside">
+			<not>
+				<void/>
+			</not>
+		</filter>
+		<!-- 鉄鉱石の破壊を許可 -->
+		<filter name="only-iron-block" parents="deny-blocks">
+			<allow>
+				<block>Iron Block</block>
+			</allow>
+		</filter>
+		<!-- 鉄鉱石の破壊を拒否 -->
+		<filter name="deny-iron-block" parents="allow-blocks">
+			<deny>
+				<block>Iron Block</block>
+			</deny>
+		</filter>
+		<!-- 作業台の破壊を拒否 -->5
+		<filter name="crafting-table" parents="allow-blocks">
+			<deny>
+				<block>Workbench</block>
+			</deny>
+		</filter>
+		<!-- プレイヤーによる破壊のみ(TNTでは壊れない)を許可 -->
+		<filter name="stairs">
+			<all>
+				<not>
+					<all>
+						<cause>explosion</cause>
+						<all>
+							<block>Quartz Block</block>
+						</all>
+					</all>
+				</not>
+				<not>
+					<all>
+						<cause>explosion</cause>
+						<all>
+							<block>Quartz Stairs</block>
+						</all>
+					</all>
+				</not>
+			</all>
+		</filter>
+	</filters>
+
+	<!-- 領域定義 -->
+	<regions>
+		<!-- マップ全体 -->
+		<rectangle name="map" min="-41,-57" max="42,58"/>
+		<!-- チーム拠点定義と保護 -->
+		<!-- 破壊保護 -->
+		<cuboid name="Hacker-base" min="-5,0,-57" max="5,13,-45"/>
+		<cuboid name="Hacker-base-foundation" min="-14,0,43" max="14,4,57"/>
+		<cuboid name="Cracker-base" min="-5,0,45" max="5,13,57"/>
+		<cuboid name="Cracker-base-foundation" min="-14,0,-57" max="14,4,-43"/>
+		<union name="Base">55
+			<region name="Hacker-base"/>
+			<region name="Hacker-base-foundation"/>
+			<region name="Cracker-base"/>
+			<region name="Cracker-base-foundation"/>
+		</union>
+		<apply block="deny-all" message="`4拠点及びその周辺は編集できません。/You may not modify base and around the area.">
+			<region name="Base"/>
+		</apply>
+		<!-- 進入保護 -->
+		<cuboid name="Hacker-base-enter" min="-4,5,-56" max="4,11,-46"/>
+		<cuboid name="Cracker-base-enter" min="-4,5,46" max="4,11,56"/>
+		<apply enter="only-Hacker" message="`4敵拠点に入る事は出来ません。/You may not enter enemy bases.">
+			<region name="Cracker-base-enter"/>
+		</apply>
+		<apply enter="only-Cracker" message="`4敵拠点に入る事は出来ません。/You may not enter enemy bases.">
+			<region name="Hacker-base-enter"/>
+		</apply>
+		
+		<!-- 階段の爆発からの保護 -->
+		<cuboid name="hacker-stairs-1" min="4,5,52" max="15,16,57"/>
+		<cuboid name="hacker-stairs-2" min="-15,5,52" max="-3,16,57"/>
+		<cuboid name="hacker-stairs-3" min="27,17,46" max="37,27,50"/>
+		<cuboid name="hacker-stairs-4" min="-37,17,46" max="-27,27,50"/>
+		<cuboid name="cracker-stairs-1" min="-15,5,-57" max="-3,16,-52"/>
+		<cuboid name="cracker-stairs-2" min="4,5,-57" max="15,16,-52"/>
+		<cuboid name="cracker-stairs-3" min="-37,17,-50" max="-27,27,-46"/>
+		<cuboid name="cracker-stairs-4" min="27,17,-50" max="37,27,-46"/>
+		<union name="stairs">
+			<region name="hacker-stairs-1"/>
+			<region name="hacker-stairs-2"/>
+			<region name="hacker-stairs-3"/>
+			<region name="hacker-stairs-4"/>
+			<region name="cracker-stairs-1"/>
+			<region name="cracker-stairs-2"/>
+			<region name="cracker-stairs-3"/>
+			<region name="cracker-stairs-4"/>
+		</union>
+		<apply block="stairs">
+			<region name="stairs"/>
+		</apply>
+
+		<!-- voidフィルターによる編集不可領域を広げないために最下層を保護 -->
+		<apply block="deny-all" message="`4最下層は編集できません。/You may not modify undermost layer.">
+			<cuboid min="-255,0,-255" max="255,0,255"/>
+		</apply>
+
+		<!-- チーム間上空領域を編集不可に設定(空橋対策のため) -->
+		<apply block="deny-all" message="`4拠点間におけるy=17以上の領域の編集は制限されています。/You may not modify more than y=17 area between the teams.">
+			<cuboid min="-41,17,-16" max="42,255,16"/>
+		</apply>
+
+		<!-- タワー -->
+		<cuboid name="tower-hacker-1" min="24,0,26" max="32,32,34"/>
+		<cuboid name="tower-hacker-2" min="-32,0,26" max="-24,32,34"/>
+		<cuboid name="tower-cracker-1" min="-32,0,-34" max="-24,32,-26"/>
+		<cuboid name="tower-cracker-2" min="24,0,-34" max="32,32,-26"/>
+		<union name="Towers">
+			<region name="tower-hacker-1"/>
+			<region name="tower-hacker-2"/>
+			<region name="tower-cracker-1"/>
+			<region name="tower-cracker-2"/>
+		</union>
+		<apply block="deny-all" message="`4タワーは編集できません。/You may not modify towers.">
+			<region name="Towers"/>
+		</apply>
+
+		<!-- ビーコン -->
+		<cuboid name="beacon-hacker-1" min="26,0,19" max="30,4,23"/>
+		<cuboid name="beacon-hacker-2" min="-30,0,19" max="-26,4,23"/>
+		<cuboid name="beacon-cracker-1" min="-30,0,-23" max="-26,4,-19"/>
+		<cuboid name="beacon-cracker-2" min="26,0,-23" max="30,4,-19"/>
+		<union name="Beacons">
+			<region name="beacon-hacker-1"/>
+			<region name="beacon-hacker-2"/>
+			<region name="beacon-cracker-1"/>
+			<region name="beacon-cracker-2"/>
+		</union>
+		<apply block="deny-all" message="`4ビーコン周辺は編集できません。/You may not modify in the area of beacon.">
+			<region name="Beacons"/>
+		</apply>
+
+		<!-- 鉄ブロック -->
+		<cuboid name="hacker-iron-1" min="-35,5,42" max="-31,7,50"/>
+		<cuboid name="hacker-iron-2" min="-25,5,42" max="-21,7,50"/>
+		<cuboid name="hacker-iron-3" min="21,5,42" max="25,7,50"/>
+		<cuboid name="hacker-iron-4" min="31,5,42" max="35,7,50"/>
+		<cuboid name="cracker-iron-1" min="31,5,-50" max="35,7,-42"/>
+		<cuboid name="cracker-iron-2" min="21,5,-50" max="25,7,-42"/>
+		<cuboid name="cracker-iron-3" min="-25,5,-50" max="-21,7,-42"/>
+		<cuboid name="cracker-iron-4" min="-35,5,-50" max="-31,7,-42"/>
+		<union name="iron-blocks">
+			<region name="hacker-iron-1"/>
+			<region name="hacker-iron-2"/>
+			<region name="hacker-iron-3"/>
+			<region name="hacker-iron-4"/>
+			<region name="cracker-iron-1"/>
+			<region name="cracker-iron-2"/>
+			<region name="cracker-iron-3"/>
+			<region name="cracker-iron-4"/>
+		</union>
+		<apply block-place="deny-iron-block" message="`4この領域には鉄ブロックは置けません。/You cannot place iron blocks in this area.">
+			<region name="iron-blocks"/>
+		</apply>
+		<apply block-break="crafting-table" message="`4作業台は破壊不可能です。/You may not modify crafting tables.">
+			<region name="map"/>
+		</apply>
+		
+		<!-- 領域外 -->
+		<apply block="outside" message="`4You may not modify void area./範囲外は編集できません。">
+			<rectangle min="-oo,-oo" max="oo,oo"/>
+		</apply>
+	</regions>
+
+	<itemremove>
+		<item>Diamond Pickaxe</item>
+		<item>Gold Sword</item>
+		<item>Snow Ball</item>
+		<item>TNT</item>
+		<item>Redstone</item>
+		<item>Redstone Torch On</item>
+		<item>Redstone Comparator</item>
+		<item>Redstone Block</item>
+		<item>Diode</item>
+		<item>Water Bucket</item>
+		<item>Stone Button</item>
+		<item>Lever</item>
+		<item>Stone Plate</item>
+		<item>Trap Door</item>
+		<item>Ladder</item>
+		<item>Nether Fence</item>
+		<item>Shears</item>
+		<item>Vine</item>
+		<item>Step</item>
+		<item>Bow</item>
+		<item>Arrow</item>
+		<item>Iron Helmet</item>
+		<item>Iron Boots</item>
+		<item>Diamond Helmet</item>
+		<item>Diamond Boots</item>
+		<item>Golden Carrot</item>
+		<item>Stained Clay</item>
+		<item>Stained Glass</item>
+	</itemremove>
+
+	<blockdrops>
+		<!-- 鉄ブロック -->
+		<rule>
+			<region>
+				<region name="iron-blocks"/>
+			</region>
+			<filter>
+				<block>Iron Block</block>
+			</filter>
+			<drops>
+				<item>Iron Block</item>
+			</drops>
+			<replacement>Iron Block</replacement>
+			<wrongtool>true</wrongtool><!-- 適正ツール使用時のみドロップ -->
+			<restore-time>0</restore-time><!-- 秒 -->
+			<direct>true</direct><!-- ブロック破壊でインベントリに直接入る -->
+		</rule>
+		<!-- ブロックドロップ拒否 -->
+		<!-- 鉄ブロックをドロップする範囲 -->
+		<rule>
+			<region>
+				<region name="iron-blocks"/>
+			</region>
+			<filter>
+				<block>Stained Clay</block>
+				<block>Redstone Lamp Off</block>
+				<block>Redstone Lamp ON</block>
+				<block>Quartz Block</block>
+				<block>Quartz Stairs</block>
+				<block>Chest</block>
+				<block>Step</block>
+				<block>Double Step</block>
+				<block>Iron Fence</block>
+				<block>Beacon</block>
+				<block>Gold Block</block>
+				<block>Obsidian</block>
+				<block>Redstone Block</block>
+			</filter>
+		</rule>
+		<!-- それ以外 -->
+		<rule>
+			<region>
+				<negative>
+					<region name="iron-blocks"/>
+				</negative>
+			</region>
+			<filter>
+				<block>Iron Block</block>
+				<block>Stained Clay</block>
+				<block>Redstone Lamp Off</block>
+				<block>Redstone Lamp ON</block>
+				<block>Quartz Block</block>
+				<block>Quartz Stairs</block>
+				<block>Chest</block>
+				<block>Step</block>
+				<block>Double Step</block>
+				<block>Iron Fence</block>
+				<block>Beacon</block>
+				<block>Gold Block</block>
+				<block>Obsidian</block>
+				<block>Redstone Block</block>
+			</filter>
+		</rule>
+	</blockdrops>
+
+	<renewables rate="50" particles="false" sound="false" avoid-entities="true">
+		<renewable>
+			<region>
+				<cuboid min="-5,11,31" max="5,22,40"/>
+			</region>
+			<region name="renews"/>
+			<renew>Stained Glass</renew>
+			<replace>Air</replace>
+			<replace>Water</replace>
+			<replace>Stationary Water</replace>
+		</renewable>
+		<renewable>
+			<region>
+				<cuboid min="-5,11,-40" max="5,22,-31"/>
+			</region>
+			<region name="renews"/>
+			<renew>Stained Glass</renew>
+			<replace>Air</replace>
+			<replace>Water</replace>
+			<replace>Stationary Water</replace>
+		</renewable>
+	</renewables>
+
+	<!-- コア定義 -->
+	<cores material="obsidian" leak="7">
+		<core team="green">
+			<cuboid min="-4,11,31" max="5,22,41"/>
+		</core>
+		<core team="red">
+			<cuboid min="-5,11,-40" max="4,22,-30"/>
+		</core>
+	</cores>
+
+	<!-- キル報酬 -->
+	<killreward>
+		<item amount="1">Golden Apple</item>
+		<item amount="32">TNT</item>
+		<item amount="16">Stained Clay</item>
+		<item ammount="16">Arrow</item>
+	</killreward>
+
+	<!-- 限界高度 -->
+	<maxbuildheight>33</maxbuildheight>
+
+	<!-- ゲームモードの設定(TNTダメージの強化のため) -->
+	<script>
+		<![CDATA[
+			match.on('start', function() {
+				match.getWorld().setDifficulty("HARD");
+			});
+		]]>
+	</script>
+
+	<!-- チュートリアル -->
+	<include src="tutorial.xml"/>
+	<tutorial>
+		<stage title="Destroy the Core(DTC)">
+			<message>
+				<line>This map is a `a`lDestroy the Core `r(DTC) map.</line>
+				<line>The objective is to destroy the other team's core on their front.</line>
+			</message>
+			<message lang="ja_JP">
+				<line>このマップは`a`lDestroy the Core `r(DTC)マップです。</line>
+				<line>敵チームのコアを破壊する事が目標になります。</line>
+			</message>
+			<teleport>
+				<point yaw="-90" piitch="30">-52,36,0</point>
+			</teleport>
+		</stage>
+
+		<!-- スポーン場所の説明 -->
+		<stage title="Hacker-Base">
+		    <message>
+    			 <line>This is Hacker team spawn point.</line>
+			</message>
+		    <message lang="ja_JP">
+			     <line>Hackerチームのスポーン場所はこちら。</line>
+		    </message>
+   			<teleport>
+   				<point yaw="180" pitch="30">0,8,55</point>
+			</teleport>
+		</stage>
+		<stage title="Cracker-Base">
+		    <message>
+    			 <line>This is Cracker team spawn point.</line>
+			</message>
+		    <message lang="ja_JP">
+			     <line>Crackerチームのスポーン場所はこちら。</line>
+		    </message>
+   			<teleport>
+   				<point yaw="0" pitch="30">0,8,-54</point>
+			</teleport>
+		</stage>
+
+		<!-- オブジェクトの説明 -->	
+		<stage title="Core">
+		    <message>
+    			 <line>This is a Core.</line>
+			</message>
+		    <message lang="ja_JP">
+			     <line>これがコアです。</line>
+		    </message>
+   			<teleport>
+   				<point yaw="0" pitch="0">0,16,24</point>
+			</teleport>
+		</stage>
+
+		<!-- 鉄鉱石の説明 -->
+		<stage title="Iron-Drops">
+		    <message>
+    			 <line>You can gain an iron ingot if you break the iron ore.</line>
+			</message>
+		    <message lang="ja_JP">
+			     <line>この鉄鉱石を破壊すると鉄ブロックを手に入れることができます。</line>
+		    </message>
+   			<teleport>
+   				<point yaw="45" pitch="15">-18,8,40</point>
+			</teleport>
+		</stage>
+	</tutorial>
+</map>
