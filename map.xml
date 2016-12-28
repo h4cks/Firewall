@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <map proto="1.3.3">
 	<name>Firewall</name>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<objective>敵拠点のコアから溶岩を流出 / Leak lava from the enemy's obsidian core.</objective>
 
 	<authors>
@@ -116,13 +116,13 @@
 				<void/>
 			</not>
 		</filter>
-		<!-- 鉄鉱石の破壊を許可 -->
+		<!-- 鉄ブロックの破壊を許可 -->
 		<filter name="only-iron-block" parents="deny-blocks">
 			<allow>
 				<block>Iron Block</block>
 			</allow>
 		</filter>
-		<!-- 鉄鉱石の破壊を拒否 -->
+		<!-- 鉄ブロックの破壊を拒否 -->
 		<filter name="deny-iron-block" parents="allow-blocks">
 			<deny>
 				<block>Iron Block</block>
@@ -484,13 +484,13 @@
 			</teleport>
 		</stage>
 
-		<!-- 鉄鉱石の説明 -->
+		<!-- 鉄ブロックの説明 -->
 		<stage title="Iron-Drops">
 		    <message>
-    			 <line>You can gain an iron ingot if you break the iron ore.</line>
+    			 <line>You can gain an iron ingot if you break the iron blocks.</line>
 			</message>
 		    <message lang="ja_JP">
-			     <line>この鉄鉱石を破壊すると鉄ブロックを手に入れることができます。</line>
+			     <line>この鉄ブロックを破壊すると鉄ブロックを手に入れることができます。</line>
 		    </message>
    			<teleport>
    				<point yaw="45" pitch="15">-18,8,40</point>
